@@ -243,11 +243,11 @@ module RDF::Sesame
       ph = pattern.to_hash
       ph = ph.merge(pattern.options) if pattern.respond_to? :options
       writer = RDF::NTriples::Writer.new
-      query[:subj]    = writer.format_value(ph.subject)   if ph.subject
-      query[:pred]    = writer.format_value(ph.predicate) if ph.predicate
-      query[:obj]     = writer.format_value(ph.object)    if ph.object
-      query[:context] = writer.format_value(ph.context)   if ph.context
-      query[:infer]   = ph.infer                          if ph.infer
+      query[:subj]    = writer.format_value(ph[:subject])   if ph[:subject]
+      query[:pred]    = writer.format_value(ph[:predicate]) if ph[:predicate]
+      query[:obj]     = writer.format_value(ph[:object])    if ph[:object]
+      query[:context] = writer.format_value(ph[:context])   if ph[:context]
+      query[:infer]   = ph[:infer]                          if ph[:infer]
       server.get(url(:statements, query), 'Accept' => 'text/plain') do |response|
         case response
           when Net::HTTPSuccess
