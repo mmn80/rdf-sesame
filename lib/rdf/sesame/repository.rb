@@ -240,9 +240,8 @@ module RDF::Sesame
     # @private
     # @see RDF::Queryable#query
     def query_pattern(pattern, &block)
-      ph = pattern.to_hash
+      ph, writer, query = pattern.to_hash, RDF::NTriples::Writer.new, {}
       ph = ph.merge(pattern.options) if pattern.respond_to? :options
-      writer = RDF::NTriples::Writer.new
       query[:subj]    = writer.format_value(ph[:subject])   if ph[:subject]
       query[:pred]    = writer.format_value(ph[:predicate]) if ph[:predicate]
       query[:obj]     = writer.format_value(ph[:object])    if ph[:object]
@@ -253,7 +252,7 @@ module RDF::Sesame
           when Net::HTTPSuccess
             reader = RDF::NTriples::Reader.new(response.body)
             reader.each_statement do |statement|
-              statement.context = ph.context
+              statement.context = ph[:context]
               block.call(statement)
             end
         end
